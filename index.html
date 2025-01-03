@@ -65,6 +65,7 @@
 <body>
   <div class="container">
     <h1>Freeze Pedal Web App</h1>
+    <button id="startAudioBtn">Start Audio</button>
     
     <!-- Octave 1 (C3 to B3) -->
     <div class="keyboard">
@@ -131,18 +132,17 @@
     let sustainedNotes = new Set();
     let isAudioContextStarted = false;
 
-    // Start AudioContext on user interaction for mobile compatibility
-    function startAudioContext() {
+    // Start AudioContext when the user presses "Start Audio"
+    document.getElementById('startAudioBtn').addEventListener('click', function () {
       if (!isAudioContextStarted) {
         Tone.start().then(() => {
           console.log("Audio context started");
           isAudioContextStarted = true;
+          // Hide the start button after starting the audio context
+          document.getElementById('startAudioBtn').style.display = 'none';
         }).catch(err => console.error("Audio context error:", err));
       }
-    }
-
-    document.body.addEventListener("touchstart", startAudioContext, { once: true });
-    document.body.addEventListener("click", startAudioContext, { once: true });
+    });
 
     // Toggle sustain of notes when clicked
     document.querySelectorAll(".keyboard button").forEach(button => {
