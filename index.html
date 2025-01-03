@@ -20,13 +20,13 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin: 20px 0;
+      margin: 10px;
     }
 
     .keyboard button {
-      font-size: 16px;
-      margin: 5px;
-      padding: 10px 15px;
+      font-size: 14px;
+      margin: 4px;
+      padding: 8px 10px;
       background-color: #444;
       color: white;
       border: none;
@@ -41,9 +41,9 @@
     }
 
     .controls button {
-      font-size: 20px;
+      font-size: 18px;
       margin: 10px;
-      padding: 15px 30px;
+      padding: 12px 25px;
       background-color: #28a745;
       color: white;
       border: none;
@@ -58,6 +58,7 @@
     .row {
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
     }
   </style>
 </head>
@@ -128,34 +129,48 @@
   <script>
     const synth = new Tone.PolySynth().toDestination();
     let sustainedNotes = new Set();
+    let isAudioContextStarted = false;
+
+    // Start AudioContext on user interaction for mobile compatibility
+    function startAudioContext() {
+      if (!isAudioContextStarted) {
+        Tone.start().then(() => {
+          console.log("Audio context started");
+          isAudioContextStarted = true;
+        });
+      }
+    }
+
+    document.body.addEventListener("touchstart", startAudioContext, { once: true });
+    document.body.addEventListener("click", startAudioContext, { once: true });
 
     // Toggle sustain of notes when clicked
-    document.querySelectorAll('.keyboard button').forEach(button => {
-      button.addEventListener('click', () => {
-        const note = button.getAttribute('data-note');
+    document.querySelectorAll(".keyboard button").forEach(button => {
+      button.addEventListener("click", () => {
+        const note = button.getAttribute("data-note");
 
         if (sustainedNotes.has(note)) {
           synth.triggerRelease(note); // Stop the note
           sustainedNotes.delete(note);
-          button.classList.remove('active'); // Reset color
+          button.classList.remove("active"); // Reset color
         } else {
           synth.triggerAttack(note); // Sustain the note
           sustainedNotes.add(note);
-          button.classList.add('active'); // Change color
+          button.classList.add("active"); // Change color
         }
       });
     });
 
     // Stop all sustained notes
-    document.getElementById('stop').addEventListener('click', () => {
+    document.getElementById("stop").addEventListener("click", () => {
       sustainedNotes.forEach(note => {
         synth.triggerRelease(note);
       });
       sustainedNotes.clear();
 
       // Reset all button colors
-      document.querySelectorAll('.keyboard button').forEach(button => {
-        button.classList.remove('active');
+      document.querySelectorAll(".keyboard button").forEach(button => {
+        button.classList.remove("active");
       });
     });
   </script>
