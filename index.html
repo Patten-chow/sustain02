@@ -137,7 +137,7 @@
         Tone.start().then(() => {
           console.log("Audio context started");
           isAudioContextStarted = true;
-        });
+        }).catch(err => console.error("Audio context error:", err));
       }
     }
 
