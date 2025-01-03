@@ -132,17 +132,20 @@
     let sustainedNotes = new Set();
     let isAudioContextStarted = false;
 
-    // Start AudioContext when the user presses "Start Audio"
-    document.getElementById('startAudioBtn').addEventListener('click', function () {
+    // Start AudioContext on touch or click
+    function startAudioContext() {
       if (!isAudioContextStarted) {
         Tone.start().then(() => {
           console.log("Audio context started");
           isAudioContextStarted = true;
-          // Hide the start button after starting the audio context
-          document.getElementById('startAudioBtn').style.display = 'none';
+          document.getElementById('startAudioBtn').style.display = 'none'; // Hide the button
         }).catch(err => console.error("Audio context error:", err));
       }
-    });
+    }
+
+    // Add event listeners for both touch and click
+    document.getElementById('startAudioBtn').addEventListener('click', startAudioContext);
+    document.getElementById('startAudioBtn').addEventListener('touchstart', startAudioContext);
 
     // Toggle sustain of notes when clicked
     document.querySelectorAll(".keyboard button").forEach(button => {
